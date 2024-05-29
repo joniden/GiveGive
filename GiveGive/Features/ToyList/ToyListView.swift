@@ -10,7 +10,8 @@ import Firebase
 import FirebaseFirestoreSwift
 
 struct ToyListView: View {
-    
+
+    // A view should never know about databases, this is for viewmodel or further back
     @EnvironmentObject var dbManager: DatabaseManager
     @State var isDismissed: Bool = false
     
@@ -53,6 +54,8 @@ struct ToyThumbnailView: View {
     @Binding var isDismissed: Bool
     
     var body: some View {
+        // This way of doing navigation like this is very memory heavy. 
+        // Here are som alternatives: https://blorenzop.medium.com/routing-navigation-in-swiftui-f1f8ff818937
         NavigationLink {
             ToyProfileView(vm: ToyProfileViewModel(toy: toy), dismissView: $isDismissed)
         } label: {
@@ -77,6 +80,7 @@ struct ToyThumbnailView: View {
             }
             .overlay(alignment: .topTrailing) {
                 Button {
+                    // UI should not trigger database actions directly
                     dbManager.deleteItem(toy: toy)
                 } label: {
                     Text("x")
