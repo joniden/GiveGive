@@ -36,6 +36,16 @@ struct QRView: View {
     
     func generateQRCode(from string: String) -> UIImage {
         filter.message = Data(string.utf8)
+
+        /** Could be more elegant
+        guard let outputImage = filter.outputImage,
+                let cgimg = context.createCGImage(outputImage, from: outputImage.extent) 
+        else {
+            return UIImage(systemName: "xmark.circle") ?? UIImage()
+        }
+        return UIImage(cgImage: cgimg)
+        */
+
         
         if let outputImage = filter.outputImage {
             if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
