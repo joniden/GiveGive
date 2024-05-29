@@ -15,7 +15,8 @@ extension UIImage {
             
             var resizingImage = self
             var imageSizeKB = Double(imageData.count) / megaByte
-            
+
+            // Feedback: I don't think I understand, are you looping until imageSizeKB is smaller than megabyte, why?
             while imageSizeKB > megaByte {
                 guard let resizedImage = resizingImage.resized(withPercentage: 0.5),
                       let imageData = resizedImage.pngData() else { return nil }
