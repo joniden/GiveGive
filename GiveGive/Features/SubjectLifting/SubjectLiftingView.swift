@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+// Now this is cool
 import VisionKit
 
 
@@ -75,6 +76,7 @@ struct SubjectLiftingView: View {
             .padding(.horizontal, 8)
             .onChange(of: subjectImage) { oldValue, newValue in
 
+                // Using a guard here is more elegant
                 if let newValue {
                     do {
                         let pixelatedImage = try viewModel.pixelate(image: newValue)
