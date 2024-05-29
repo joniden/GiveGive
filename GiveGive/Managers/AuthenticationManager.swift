@@ -29,6 +29,7 @@ final class AuthenticationManager {
     func anonymousSignIn() async throws {
         
         _ = try await auth.signInAnonymously()
+        //Why create a new user every time?
         try await self.createNewUser()
 
     }
