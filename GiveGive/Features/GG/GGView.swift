@@ -12,6 +12,21 @@ import FirebaseAuth
 import WebKit
 
 @MainActor
+// This does not need to use ObservableObject since you are not using any observing objects (like publisher)
+// You can rewrite it like this
+/**
+final class GGViewModel: ObservableObject {
+    
+    @Published var user: User? // Needs to be optional since no user exist
+
+    func signInUser() async throws {
+        // Use await as a way to follow the flow of the code
+        try await AuthenticationManager.shared.anonymousSignIn()
+        self.user = AuthenticationManager.shared.currentUser
+    }
+}
+*/
+
 final class GGViewModel: ObservableObject {
     
     var user = AuthenticationManager.shared.currentUser
@@ -22,7 +37,8 @@ final class GGViewModel: ObservableObject {
 }
 
 struct GGView: View {
-    
+
+    // Change to ObservedObject (since the user always signs in this view)
     @StateObject private var viewModel = GGViewModel()
     
     @State private var showSheet = false
@@ -52,12 +68,15 @@ struct GGView: View {
                     
                     VStack {
                         FeedButton(showSheet: $showSheet)
+                            // This can be written as
+                            //.padding(.trailing, 32)
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 32))
                         
                         BellyButton()
                     }
                 }
                 .ignoresSafeArea()
+                // Use .task instead of onAppear, then you can remove the Task { as well
                 .onAppear {
 
                     Task {
@@ -73,6 +92,16 @@ struct GGView: View {
                 }, content: {
                     SubjectLiftingView(subjectArray: $subjectArray)
                 })
+                // Neither oldvalue or newvalue is used.
+                // Change it to 
+                /**
+                .onChange(of: showSheet) { _ , newValue in
+                    showSubjects = !newValue
+                    if !showSubjects {
+                        fallingToyArray.removeAll()
+                    }
+                }
+                */
                 .onChange(of: showSheet) { oldValue, newValue in
                     showSubjects = !showSheet
                     if !showSubjects {
@@ -107,7 +136,8 @@ struct FallingToy: Identifiable {
     let id = UUID()
     let image: UIImage
     var position: CGPoint
-    
+
+    // Is this used?
     mutating func updatePosition(_ position: CGPoint) {
         self.position = position
     }
