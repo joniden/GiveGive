@@ -27,7 +27,8 @@ struct ToyProfileView: View {
     @State private var receivedToyId: String = ""
     
     @Binding var dismissView: Bool
-    
+
+    // No db manager in view
     @EnvironmentObject var dbManager: DatabaseManager
     
     var body: some View {
@@ -84,6 +85,7 @@ struct ToyProfileView: View {
                 
             }
         }
+        // Replace oldvalue and newvalue with _, _
         .onChange(of: isShowingScanner, { oldValue, newValue in
             Task {
                 if !receivedToyId.isEmpty {
@@ -94,6 +96,7 @@ struct ToyProfileView: View {
         })
         .onChange(of: dbManager.currentToyList, { oldValue, newValue in
             Task {
+                // Not async, does not need task
                 dismiss()
             }
         })
@@ -109,6 +112,9 @@ struct ToyProfileView: View {
         case .success(let result):
             print("result \(result)")
             let details = result.string
+            /**
+                This is not good, this is optional swift code that is converted to a string.
+                Remove the optional part by using let or guard */
                 .replacingOccurrences(of: "Optional(\"", with: "")
                 .replacingOccurrences(of: "\")", with: "")
             print("details \(details)")
